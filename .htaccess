@@ -1,0 +1,8 @@
+Options All -Indexes
+
+RewriteEngine On
+RewriteBase /scholarship/
+
+RewriteRule ^config/ - [F,L]
+RewriteRule ^func/ - [F,L]
+RewriteRule ^manage/data/?$ manage_data.php [PT,L]
