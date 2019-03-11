@@ -4,7 +4,7 @@ require __DIR__ . '/func/data.php';
 
 $data_offset = $_GET['offset'] ?? 0;
 $date_limit = $_GET['limit'] ?? 10;
-get_data($data_offset, $date_limit);
+list_data($data_offset, $date_limit);
 ?>
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
@@ -33,6 +33,11 @@ get_data($data_offset, $date_limit);
                             <th>申請期限</th>
                             <th>獎學金金額</th>
                             <th>本校薦送名額</th>
+                            <?php
+                            if ($U["islogin"]) {
+                            ?>
+                            <th>管理</th>
+                            <?php } ?>
                         </tr>
                         <?php
 						foreach ($D['data'] as $data_id => $row) {
@@ -65,11 +70,18 @@ get_data($data_offset, $date_limit);
                                 </ul>
                             </td>
                             <td>
-                                <?=$G["data_apply"][$row['apply']]?><br>
+                                <?=$row['apply']?><br>
                                 <?=$row['date_start']?>~<?=$row['date_end']?>
                             </td>
                             <td><?=$row['money']?></td>
                             <td><?=$row['quota']?></td>
+                            <?php
+                            if ($U["islogin"]) {
+                            ?>
+                            <td>
+                                <a href="<?=$C["path"]?>/manage/data/edit/<?=$data_id?>">修改</a>
+                            </td>
+                            <?php } ?>
                         </tr>
                         <?php
 						}
@@ -81,9 +93,9 @@ get_data($data_offset, $date_limit);
     </div>
 
     <?php
-require __DIR__ . '/resources/footer.php';
-require __DIR__ . '/resources/load_footer.php';
-?>
+    require __DIR__ . '/resources/footer.php';
+    require __DIR__ . '/resources/load_footer.php';
+    ?>
 </body>
 
 </html>

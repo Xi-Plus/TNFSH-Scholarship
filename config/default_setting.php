@@ -1,5 +1,10 @@
 <?php
 
+$C = [];
+$D = [];
+$G = [];
+$U = [];
+
 $C["domain"] = 'https://example.com';
 $C["path"] = '/scholarship';
 $C["sitename"] = '獎學金公告';
@@ -25,10 +30,13 @@ $G["PasswordSecurityText"] = [
 	"password_is_popular" => "密碼在常見密碼列表中前" . $C["PasswordSecurityCannotBePopular"] . "位",
 ];
 
-$G["data_apply"] = [
-	1 => "向註冊組申請",
-	2 => "自行申請",
-];
+$C["FilenameReserved"] = '\/:*?"<>|';
+$C["FilenamePattern"] = '[^';
+foreach (str_split($C["FilenameReserved"]) as $char) {
+	$C["FilenamePattern"] .= '\x'.sprintf("%x", ord($char));
+}
+$C["FilenamePattern"] .= '\x00-\x1f\x7f]+';
+$C["FilenameTitle"] = "不可包含控制字元和以下字元: ".htmlentities(implode(" ", str_split($C["FilenameReserved"])));
 
 date_default_timezone_set("Asia/Taipei");
 

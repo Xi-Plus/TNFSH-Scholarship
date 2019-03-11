@@ -1,7 +1,9 @@
 <?php
 
-function get_data($offset, $limit) {
+function list_data($offset, $limit) {
 	global $C, $D, $G;
+
+	$apply = get_apply();
 
 	$D['data'] = [];
 
@@ -14,7 +16,8 @@ function get_data($offset, $limit) {
 		$D['data'][$row['data_id']] = [];
 		$D['data'][$row['data_id']]['semester'] = $row['data_semester'];
 		$D['data'][$row['data_id']]['name'] = $row['data_name'];
-		$D['data'][$row['data_id']]['apply'] = $row['data_apply'];
+		$D['data'][$row['data_id']]['apply'] = $apply[$row['data_apply']];
+		$D['data'][$row['data_id']]['apply_id'] = $row['data_apply'];
 		$D['data'][$row['data_id']]['date_start'] = $row['data_date_start'];
 		$D['data'][$row['data_id']]['date_end'] = $row['data_date_end'];
 		$D['data'][$row['data_id']]['money'] = $row['data_money'];
@@ -52,4 +55,111 @@ function get_data($offset, $limit) {
 	foreach ($all as $row) {
 		$D['data'][$row['da_data']]['attachments'][] = ['id' => $row['da_attachment'], 'name' => $row['att_name']];
 	}
+}
+
+function get_data($data_id) {
+	global $C, $G;
+
+	$apply = get_apply();
+
+	$result = [
+		'semester' => '',
+		'name' => '',
+		'apply' => 1,
+		'date_start' => '',
+		'date_end' => '',
+		'money' => '',
+		'quota' => '',
+		'qualifications' => [],
+		'qualification_ids' => [],
+		'attachments' => [],
+	];
+
+	$sth = $G["db"]->prepare('SELECT * FROM `data` WHERE `data_id` = :data_id');
+	$sth->bindValue(':data_id', (int) $data_id, PDO::PARAM_INT);
+	$sth->execute();
+	$row = $sth->fetch(PDO::FETCH_ASSOC);
+
+	if ($row === false) {
+		return $result;
+	}
+
+	$result['semester'] = $row['data_semester'];
+	$result['name'] = $row['data_name'];
+	$result['apply_id'] = $row['data_apply'];
+	$result['apply'] = $apply[$row['data_apply']];
+	$result['date_start'] = $row['data_date_start'];
+	$result['date_end'] = $row['data_date_end'];
+	$result['money'] = $row['data_money'];
+	$result['quota'] = $row['data_quota'];
+	$result['qualifications'] = [];
+	$result['qualification_ids'] = [];
+	$result['attachments'] = [];
+
+	// data_qualifications
+	$sth = $G["db"]->prepare('SELECT `dq_data`, `qua_id`, `qua_name` FROM (
+		SELECT * FROM `data_qualifications` WHERE `dq_data` = :data_id
+	) `data_qualifications`
+	LEFT JOIN `qualifications` ON `dq_qualification` = `qua_id`');
+	$sth->bindValue(':data_id', (int) $data_id, PDO::PARAM_INT);
+	$sth->execute();
+	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($all as $row) {
+		$result['qualifications'][] = $row['qua_name'];
+		$result['qualification_ids'][] = $row['qua_id'];
+	}
+
+	// data_attachments
+	$sth = $G["db"]->prepare('SELECT `da_data`, `da_attachment`, `att_name` FROM (
+		SELECT * FROM `data_attachments` WHERE `da_data` = :data_id
+	) `data_attachments`
+	LEFT JOIN `attachments` ON `da_attachment` = `att_id`');
+	$sth->bindValue(':data_id', (int) $data_id, PDO::PARAM_INT);
+	$sth->execute();
+	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($all as $row) {
+		$result['attachments'][] = ['att_id' => $row['da_attachment'], 'att_name' => $row['att_name']];
+	}
+
+	return $result;
+}
+
+function get_qualifications() {
+	global $C, $G;
+
+	$result = [];
+
+	$sth = $G["db"]->prepare('SELECT * FROM `qualification_category` ORDER BY `qc_id`');
+	$sth->execute();
+	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($all as $row) {
+		$result[$row['qc_id']] = [
+			'name' => $row['qc_name'],
+			'list' => [],
+		];
+	}
+
+	$sth = $G["db"]->prepare('SELECT * FROM `qualifications` ORDER BY `qua_id` ASC');
+	$sth->execute();
+	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($all as $row) {
+		$result[$row['qua_category']]['list'][$row['qua_id']] = $row['qua_name'];
+	}
+
+	return $result;
+}
+
+function get_apply() {
+	global $C, $G;
+
+	$result = [];
+
+	$sth = $G["db"]->prepare('SELECT * FROM `apply` ORDER BY `app_id` ASC');
+	$sth->execute();
+	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($all as $row) {
+		$result[$row['app_id']] = $row['app_name'];
+	}
+
+	return $result;
 }
