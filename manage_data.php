@@ -3,25 +3,26 @@ require __DIR__ . '/config/default_setting.php';
 require __DIR__ . '/func/data.php';
 require __DIR__ . '/func/alert.php';
 
-$action = $_GET['action'] ?? 'new';
-$data_id = $_GET['data_id'] ?? 0;
-if ($action !== 'edit') {
-	$action = 'new';
-	$data_id = 0;
-}
-$actionname = ['edit' => '修改', 'new' => '新增'][$action];
-
-$D['apply'] = get_apply();
-$D['data'] = get_data($data_id);
-$D['qualifications'] = get_qualifications();
-
 $showform = true;
 if (!$U["islogin"]) {
 	add_alert('此功能需要驗證帳號，請<a href="' . $C["path"] . '/login/">登入</a>');
 	$showform = false;
 }
 
-if (isset($_POST['edit'])) {
+if ($showform) {
+	$action = $_GET['action'];
+	if (!in_array($action, ['edit', 'new'])) {
+		$action = 'new';
+	}
+	$data_id = $_GET['data_id'] ?? 0;
+	$actionname = ['edit' => '修改', 'new' => '新增'][$action];
+	$back = in_array($_POST['submitaction'], ['editandback', 'newandback']);
+	$D['apply'] = get_apply();
+	$D['data'] = get_data($data_id);
+	$D['qualifications'] = get_qualifications();
+}
+
+if ($showform && isset($_POST['submitaction']) && $action === 'edit') {
 	$sth = $G["db"]->prepare("UPDATE `data` SET
 		`data_semester` = :semester,
 		`data_name` = :name,
@@ -40,11 +41,34 @@ if (isset($_POST['edit'])) {
 	$sth->bindValue(":quota", $_POST['quota']);
 	$sth->bindValue(":data_id", $data_id);
 	$sth->execute();
-	add_alert('資料已保存', 'success');
+
+	$sth = $G["db"]->prepare("DELETE FROM `data_qualifications` WHERE `dq_data` = :dq_data");
+	$sth->bindValue(":dq_data", $data_id);
+	$sth->execute();
+
+	foreach ($_POST['qualifications'] as $qualification) {
+		$sth = $G["db"]->prepare("INSERT INTO `data_qualifications` (`dq_data`, `dq_qualification`) VALUES (:dq_data, :dq_qualification)");
+		$sth->bindValue(":dq_data", $data_id);
+		$sth->bindValue(":dq_qualification", $qualification);
+		$sth->execute();
+	}
+
+	$sth = $G["db"]->prepare("DELETE FROM `data_attachments` WHERE `da_data` = :da_data");
+	$sth->bindValue(":da_data", $data_id);
+	$sth->execute();
+
+	foreach ($_POST['attachments'] as $attachment) {
+		$sth = $G["db"]->prepare("INSERT INTO `data_attachments` (`da_data`, `da_attachment`) VALUES (:da_data, :da_attachment)");
+		$sth->bindValue(":da_data", $data_id);
+		$sth->bindValue(":da_attachment", $attachment);
+		$sth->execute();
+	}
+
+	add_alert('資料已保存' . ($back ? '，正在返回列表' : ''), 'success');
 	$D['data'] = get_data($data_id);
 }
 
-if (isset($_POST['new'])) {
+if ($showform && isset($_POST['submitaction']) && $action === 'new') {
 	$sth = $G["db"]->prepare("INSERT INTO `data` (`data_semester`, `data_name`, `data_apply`, `data_date_start`, `data_date_end`, `data_money`, `data_quota`) VALUES (:semester, :name, :apply, :date_start, :date_end, :money, :quota)");
 	$sth->bindValue(":semester", $_POST['semester']);
 	$sth->bindValue(":name", $_POST['name']);
@@ -54,8 +78,25 @@ if (isset($_POST['new'])) {
 	$sth->bindValue(":money", $_POST['money']);
 	$sth->bindValue(":quota", $_POST['quota']);
 	$sth->execute();
-	add_alert('資料已新增', 'success');
-	$D['data'] = get_data(0);
+
+	$data_id = $G["db"]->lastInsertId();
+
+	foreach ($_POST['qualifications'] as $qualification) {
+		$sth = $G["db"]->prepare("INSERT INTO `data_qualifications` (`dq_data`, `dq_qualification`) VALUES (:dq_data, :dq_qualification)");
+		$sth->bindValue(":dq_data", $data_id);
+		$sth->bindValue(":dq_qualification", $qualification);
+		$sth->execute();
+	}
+
+	foreach ($_POST['attachments'] as $attachment) {
+		$sth = $G["db"]->prepare("INSERT INTO `data_attachments` (`da_data`, `da_attachment`) VALUES (:da_data, :da_attachment)");
+		$sth->bindValue(":da_data", $data_id);
+		$sth->bindValue(":da_attachment", $attachment);
+		$sth->execute();
+	}
+
+	add_alert('資料已新增' . ($back ? '，正在返回列表' : ''), 'success');
+	$D['data'] = get_data($data_id);
 }
 
 ?>
@@ -168,7 +209,13 @@ if ($showform) {
 			</div>
 			<div class="row">
 				<div class="col-sm-10 offset-sm-2">
-					<button type="submit" class="btn btn-success" name="<?=$action?>"><?=$actionname?></button>
+					<?php if ($action === 'edit') {?>
+						<button type="submit" class="btn btn-success" name="submitaction" value="editandback">修改並回到列表</button>
+						<button type="submit" class="btn btn-success" name="submitaction" value="edit">修改</button>
+					<?php } else {?>
+						<button type="submit" class="btn btn-success" name="submitaction" value="newandback">新增並回到列表</button>
+						<button type="submit" class="btn btn-success" name="submitaction" value="new">新增後繼續新增下一筆</button>
+					<?php }?>
 				</div>
 			</div>
 		</form>
@@ -188,6 +235,16 @@ function removefile(e) {
 </script>
 
 <?php
+if ($back) {
+		?>
+	<script>
+	setTimeout(() => {
+		document.location = '<?=$C["path"]?>/';
+	}, 1000);
+	</script>
+	<?php
+}
+
 }
 require __DIR__ . '/resources/footer.php';
 require __DIR__ . '/resources/load_footer.php';

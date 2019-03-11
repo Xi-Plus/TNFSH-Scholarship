@@ -7,7 +7,7 @@ function list_data($offset, $limit) {
 
 	$D['data'] = [];
 
-	$sth = $G["db"]->prepare('SELECT * FROM `data` ORDER BY `data_date_end` DESC LIMIT :offset, :limit');
+	$sth = $G["db"]->prepare('SELECT * FROM `data` ORDER BY `data_date_end` DESC, `data_id` DESC LIMIT :offset, :limit');
 	$sth->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
 	$sth->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
 	$sth->execute();

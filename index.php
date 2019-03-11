@@ -17,9 +17,10 @@ list_data($data_offset, $date_limit);
 </head>
 
 <body>
-    <?php
-	require __DIR__ . '/resources/header.php';
-	?>
+
+<?php
+require __DIR__ . '/resources/header.php';
+?>
     <div class="container-fluid">
         <div class="row">
             <div class="col">
@@ -33,40 +34,34 @@ list_data($data_offset, $date_limit);
                             <th>申請期限</th>
                             <th>獎學金金額</th>
                             <th>本校薦送名額</th>
-                            <?php
-                            if ($U["islogin"]) {
-                            ?>
+                            <?php if ($U["islogin"]) {?>
                             <th>管理</th>
-                            <?php } ?>
+                            <?php }?>
                         </tr>
-                        <?php
-						foreach ($D['data'] as $data_id => $row) {
-						?>
+                        <?php foreach ($D['data'] as $data_id => $row) {?>
                         <tr <?=($row['date_end'] < date('Y-m-d') ? ' class="table-secondary"' : '')?>>
                             <td><?=$row['semester']?></td>
                             <td><?=$data_id?> <?=$row['name']?></td>
                             <td>
                                 <ul>
-                                    <?php
-									foreach ($row['qualifications'] as $qualification) {
-										?><li><?=$qualification?></li><?php
-									}
-									if (count($row['qualifications']) == 0) {
-										?><li>無</li><?php
-									}
-									?>
+								<?php foreach ($row['qualifications'] as $qualification) {?>
+									<li><?=$qualification?></li>
+								<?php }?>
+								<?php if (count($row['qualifications']) == 0) {?>
+									<li>無</li>
+								<?php }?>
                                 </ul>
                             </td>
                             <td>
                                 <ul>
-                                    <?php
-									foreach ($row['attachments'] as $attachment) {
-										?><li><?=$attachment['id']?> <?=$attachment['name']?></li><?php
-									}
-									if (count($row['attachments']) == 0) {
-										?><li>無</li><?php
-									}
-									?>
+                                    <?php foreach ($row['attachments'] as $attachment) {?>
+									<li>
+										<a href="<?=$C["path"]?>/download/<?=$attachment['id']?>"><?=$attachment['name']?></a>
+									</li>
+									<?php }?>
+									<?php if (count($row['attachments']) == 0) {?>
+									<li>無</li>
+									<?php }?>
                                 </ul>
                             </td>
                             <td>
@@ -75,27 +70,24 @@ list_data($data_offset, $date_limit);
                             </td>
                             <td><?=$row['money']?></td>
                             <td><?=$row['quota']?></td>
-                            <?php
-                            if ($U["islogin"]) {
-                            ?>
+                            <?php if ($U["islogin"]) {?>
                             <td>
-                                <a href="<?=$C["path"]?>/manage/data/edit/<?=$data_id?>">修改</a>
+                                <a href="<?=$C["path"]?>/manage/data/edit/<?=$data_id?>">修改</a><br>
+                                <a href="<?=$C["path"]?>/manage/data/new/<?=$data_id?>">複製</a>
                             </td>
-                            <?php } ?>
+                            <?php }?>
                         </tr>
-                        <?php
-						}
-						?>
+                        <?php }?>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <?php
-    require __DIR__ . '/resources/footer.php';
-    require __DIR__ . '/resources/load_footer.php';
-    ?>
+<?php
+require __DIR__ . '/resources/footer.php';
+require __DIR__ . '/resources/load_footer.php';
+?>
 </body>
 
 </html>
