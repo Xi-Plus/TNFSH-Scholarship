@@ -149,6 +149,16 @@ function get_qualifications() {
 	return $result;
 }
 
+function get_qcid_by_quaid($qua_id) {
+	global $C, $G;
+
+	$sth = $G["db"]->prepare('SELECT * FROM `qualifications` WHERE `qua_id` = :qua_id');
+	$sth->bindValue(':qua_id', (int) $qua_id, PDO::PARAM_INT);
+	$sth->execute();
+	$qua = $sth->fetch(PDO::FETCH_ASSOC);
+	return $qua['qua_category'];
+}
+
 function get_apply() {
 	global $C, $G;
 
