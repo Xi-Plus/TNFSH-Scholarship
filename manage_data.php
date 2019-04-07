@@ -180,7 +180,7 @@ if ($showform) {
 					<?php foreach ($D['apply'] as $app_id => $app_name) {?>
 					<label>
 						<input type="radio" name="apply" value="<?=$app_id?>"
-							<?=($D['data']['apply_id'] == $app_id ? 'checked' : '')?>><?=$app_name?>
+							<?=($D['data']['apply_id'] == $app_id ? 'checked' : '')?> required><?=$app_name?>
 					</label>
 					<?php }?>
 				</div>
