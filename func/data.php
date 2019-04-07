@@ -163,3 +163,18 @@ function get_apply() {
 
 	return $result;
 }
+
+function get_account() {
+	global $C, $G;
+
+	$result = [];
+
+	$sth = $G["db"]->prepare('SELECT * FROM `admin` ORDER BY `adm_account`');
+	$sth->execute();
+	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($all as $row) {
+		$result[$row['adm_account']] = $row;
+	}
+
+	return $result;
+}
