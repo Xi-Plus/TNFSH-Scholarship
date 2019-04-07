@@ -51,3 +51,5 @@ date_default_timezone_set("Asia/Taipei");
 include __DIR__ . '/local_setting.php';
 
 $G["db"] = new PDO('mysql:host=' . $C["DBhost"] . ';dbname=' . $C["DBname"] . ';charset=utf8', $C["DBuser"], $C["DBpass"]);
+
+require __DIR__ . '/../func/check_login.php';
