@@ -143,7 +143,7 @@ function get_qualifications() {
 	$sth->execute();
 	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($all as $row) {
-		$result[$row['qua_category']]['list'][$row['qua_id']] = $row['qua_name'];
+		$result[$row['qua_category']]['list'][$row['qua_id']] = $row;
 	}
 
 	return $result;
