@@ -2,6 +2,9 @@
 require __DIR__ . '/config/default_setting.php';
 require __DIR__ . '/func/alert.php';
 
+$regex = '/' . preg_quote($C['domain'] . $C['path'] . '/manage/data/', '/') . '(new|edit\/\d+)/';
+$from_data = preg_match($regex, $_SERVER['HTTP_REFERER']);
+
 $showform = true;
 if (!$U["islogin"]) {
 	add_alert('此功能需要驗證帳號，請<a href="' . $C["path"] . '/login/">登入</a>');
@@ -31,15 +34,12 @@ if ($showform && isset($_POST["filename"]) && isset($_FILES["file"])) {
 				$sth->bindValue(":att_id", $att_id);
 				$sth->bindValue(":att_name", $att_name);
 				$sth->execute();
-				add_alert('上傳成功，5秒後返回上一頁，<a href="#" onclick=backpage();>立刻返回</a>。', 'success');
+				add_alert('<span class="hide-from-data">上傳成功。</span><span class="show-from-data">上傳成功，5秒後返回上一頁，<a href="#" onclick=backpage();>立刻返回</a>。</span>', 'success');
 				$is_ok = true;
-				$showform = false;
 			}
 		} else {
-			add_alert('發現舊檔案，5秒後返回上一頁，<a href="#" onclick=backpage();>立刻返回</a>。', 'success');
-			$att_name = $att['att_name'];
+			add_alert('<span class="hide-from-data">發現舊檔案。</span><span class="show-from-data">發現舊檔案，5秒後返回上一頁，<a href="#" onclick=backpage();>立刻返回</a>。</span>', 'success');
 			$is_ok = true;
-			$showform = false;
 		}
 	} else {
 		add_alert('上傳失敗');
@@ -64,13 +64,18 @@ if ($showform) {
 </head>
 
 <body>
+<style>
+.show-from-data {
+	display: none;
+}
+</style>
 
 <?php
 require __DIR__ . '/resources/header.php';
 show_alert();
 if ($showform) {
 	?>
-	<div class="container">
+	<div class="container hide-from-data">
 		<h2>上傳檔案</h2>
 		<form action="" method="post" enctype="multipart/form-data">
 			<div class="form-group row">
@@ -92,15 +97,26 @@ if ($showform) {
 					aria-hidden="true"></i> 上傳</button>
 		</form>
 		<div style="height: 20px;"></div>
+		<?php if ($from_data) {?>
 		或是...
 		<h3>選擇最近上傳的檔案</h3>
 		<ul>
-		<?php foreach ($D['recentatt'] as $att) {?>
+			<?php foreach ($D['recentatt'] as $att) {?>
 			<li>
 				<?=$att['att_time']?> <a href="#" onclick="backpage('<?=$att['att_id']?>', '<?=htmlentities($att['att_name'])?>')"><?=$att['att_name']?></a>
 			</li>
-		<?php }?>
+			<?php }?>
 		</ul>
+		<?php } else {?>
+		<h3>最近上傳的檔案</h3>
+		<ul>
+			<?php foreach ($D['recentatt'] as $att) {?>
+				<li>
+					<?=$att['att_time']?> <?=$att['att_name']?>
+				</li>
+			<?php }?>
+		</ul>
+		<?php }?>
 	</div>
 
 	<script type="text/javascript">
@@ -108,6 +124,10 @@ if ($showform) {
 		filename.value = e.files[0].name;
 	}
 	function backpage(att_id, att_name) {
+		if (window.opener === null) {
+			alert('管理資料頁面已被關閉，請重新編輯資料並選取檔案');
+			return;
+		}
 		window.opener.morefile(att_id, att_name);
 		window.close();
 	}
@@ -118,9 +138,15 @@ if ($showform) {
 if ($is_ok) {
 	?>
 	<script>
-	setTimeout(() => {
-		backpage('<?=$att_id?>', '<?=htmlentities($att_name)?>');
-	}, 5000);
+	window.onload = function() {
+		if (window.opener !== null) {
+			$('.hide-from-data').css('display', 'none');
+			$('.show-from-data').css('display', 'block');
+			setTimeout(() => {
+				backpage('<?=$att_id?>', '<?=htmlentities($att_name)?>');
+			}, 5000);
+		}
+	}
 	</script>
 	<?php
 }
