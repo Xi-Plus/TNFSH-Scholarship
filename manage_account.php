@@ -32,7 +32,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'new') {
 		$sth->execute();
 		$D['account'][$_POST['account']] = ['adm_account' => $_POST['account'], 'adm_name' => $_POST['name']];
 
-		add_alert('已新增' . htmlentities($_POST['name']), 'success');
+		add_alert('已新增' . htmlentities($_POST['account']), 'success');
 	}
 }
 
@@ -46,7 +46,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'edit') {
 				$sth->bindValue(":adm_account", $_POST['account']);
 				$sth->execute();
 
-				add_alert('已將' . htmlentities($_POST['name']) . '的驗證方式改為Web Mail', 'success');
+				add_alert('已將' . htmlentities($_POST['account']) . '的驗證方式改為Web Mail', 'success');
 			}
 		} else {
 			if ($_POST['password'] !== '') {
@@ -56,7 +56,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'edit') {
 				$sth->bindValue(":adm_account", $_POST['account']);
 				$sth->execute();
 
-				add_alert('已修改' . htmlentities($_POST['name']) . '的密碼', 'success');
+				add_alert('已修改' . htmlentities($_POST['account']) . '的密碼', 'success');
 			}
 		}
 	}
@@ -66,7 +66,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'edit') {
 		$sth->bindValue(":adm_account", $_POST['account']);
 		$sth->execute();
 
-		add_alert('已修改' . htmlentities($_POST['name']) . '的姓名', 'success');
+		add_alert('已修改' . htmlentities($_POST['account']) . '的姓名', 'success');
 	}
 }
 
