@@ -10,6 +10,11 @@ $C["path"] = '/scholarship';
 $C["sitename"] = '獎學金公告';
 $C["titlename"] = '獎學金公告';
 
+$C['cookiename'] = 'scholarship';
+$C['cookieexpire'] = 86400 * 30;
+
+$C['webmail'] = '';
+
 $C["DBhost"] = 'localhost';
 $C["DBuser"] = '';
 $C["DBpass"] = '';
