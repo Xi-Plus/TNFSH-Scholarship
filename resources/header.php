@@ -25,6 +25,8 @@
                         aria-expanded="true"><i class="fas fa-wrench"></i> 管理</a>
                     <div class="dropdown-menu" aria-labelledby="manage">
                         <a class="dropdown-item" href="<?=$C["path"]?>/manage/data/new"><i class="fas fa-database"></i> 新增資料</a>
+                        <a class="dropdown-item" href="<?=$C["path"]?>/manage/upload/"><i class="fa fa-user"
+                                aria-hidden="true"></i> 上傳檔案</a>
                         <a class="dropdown-item" href="<?=$C["path"]?>/manage/account/"><i class="fa fa-user"
                                 aria-hidden="true"></i> 帳號</a>
                     </div>
