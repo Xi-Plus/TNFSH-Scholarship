@@ -10,16 +10,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?=$C["path"]?>/"><i class="fa fa-home" aria-hidden="true"></i> 首頁</a>
                 </li>
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="download" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="true"><i class="fa fa-download" aria-hidden="true"></i>
-                        下載</a>
-                    <div class="dropdown-menu" aria-labelledby="download">
-                        <a class="dropdown-item" href="<?=$C["path"]?>/student/"><i class="fa fa-graduation-cap"
-                                aria-hidden="true"></i> 學生</a>
-                        <a class="dropdown-item" href="<?=$C["path"]?>/school/"><i class="fas fa-school"></i> 學校</a>
-                    </div>
-                </li> -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="manage" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="true"><i class="fas fa-wrench"></i> 管理</a>
