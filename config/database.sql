@@ -75,7 +75,8 @@ ALTER TABLE `attachments`
   ADD PRIMARY KEY (`att_id`);
 
 ALTER TABLE `data`
-  ADD PRIMARY KEY (`data_id`);
+  ADD PRIMARY KEY (`data_id`),
+  ADD KEY `data_apply` (`data_apply`);
 
 ALTER TABLE `data_attachments`
   ADD KEY `data_id` (`da_data`),
@@ -109,6 +110,9 @@ ALTER TABLE `qualifications`
 ALTER TABLE `qualification_category`
   MODIFY `qc_id` int(11) NOT NULL AUTO_INCREMENT;
 
+
+ALTER TABLE `data`
+  ADD CONSTRAINT `data_ibfk_1` FOREIGN KEY (`data_apply`) REFERENCES `apply` (`app_id`);
 
 ALTER TABLE `data_attachments`
   ADD CONSTRAINT `data_attachments_ibfk_1` FOREIGN KEY (`da_attachment`) REFERENCES `attachments` (`att_id`),
