@@ -57,7 +57,7 @@ require __DIR__ . '/resources/header.php';
                         <?php foreach ($D['data'] as $data_id => $row) {?>
                         <tr <?=($row['date_end'] < date('Y-m-d') ? ' class="table-secondary"' : '')?>>
                             <td><?=$row['semester']?></td>
-                            <td><?=$data_id?> <?=$row['name']?></td>
+                            <td><?=$row['name']?></td>
                             <td>
                                 <ul>
 								<?php foreach ($row['qualifications'] as $qualification) {?>
