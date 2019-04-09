@@ -56,12 +56,12 @@ require __DIR__ . '/resources/header.php';
                         </tr>
                         <?php foreach ($D['data'] as $data_id => $row) {?>
                         <tr <?=($row['date_end'] < date('Y-m-d') ? ' class="table-secondary"' : '')?>>
-                            <td><?=$row['semester']?></td>
-                            <td><?=$row['name']?></td>
+                            <td><?=htmlentities($row['semester'])?></td>
+                            <td><?=htmlentities($row['name'])?></td>
                             <td>
                                 <ul>
 								<?php foreach ($row['qualifications'] as $qualification) {?>
-									<li><?=$qualification?></li>
+									<li><?=htmlentities($qualification)?></li>
 								<?php }?>
 								<?php if (count($row['qualifications']) == 0) {?>
 									<li>無</li>
@@ -84,10 +84,10 @@ require __DIR__ . '/resources/header.php';
                                 <?=$row['apply']?><br>
                                 <?=$row['date_start']?>~<?=$row['date_end']?>
                                 <?php if ($row['quota'] !== '') {?>
-                                    <br>名額：<?=$row['quota']?>
+                                    <br>名額：<?=htmlentities($row['quota'])?>
                                 <?php }?>
                             </td>
-                            <td><?=$row['money']?></td>
+                            <td><?=htmlentities($row['money'])?></td>
                             <td><?=nl2br(htmlentities($row['note']))?></td>
                             <?php if ($U["islogin"]) {?>
                             <td>

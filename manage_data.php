@@ -142,12 +142,12 @@ if ($showform) {
 					<ul>
 						<?php foreach ($D['qualifications'] as $qc_id => $qc) {?>
 						<li>
-							<?=$qc['name']?>
+							<?=htmlentities($qc['name'])?>
 							<?php foreach ($qc['list'] as $qua_id => $qua) {?>
 							<label>
 								<input type="checkbox" name="qualifications[]" value="<?=$qua_id?>"
 									<?=(in_array($qua_id, $D['data']['qualification_ids']) ? 'checked' : '')?>>
-								<?=$qua['qua_name']?>
+								<?=htmlentities($qua['qua_name'])?>
 							</label>
 							<?php }?>
 							</li>

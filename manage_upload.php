@@ -103,7 +103,7 @@ if ($showform) {
 		<ul>
 			<?php foreach ($D['recentatt'] as $att) {?>
 			<li>
-				<?=$att['att_time']?> <a href="#" onclick="backpage('<?=$att['att_id']?>', '<?=htmlentities($att['att_name'])?>')"><?=$att['att_name']?></a>
+				<?=$att['att_time']?> <a href="#" onclick="backpage('<?=$att['att_id']?>', '<?=addslashes($att['att_name'])?>')"><?=$att['att_name']?></a>
 			</li>
 			<?php }?>
 		</ul>

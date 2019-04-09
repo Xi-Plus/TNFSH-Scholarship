@@ -18,7 +18,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'new_app') {
 	$sth->bindValue(":app_name", $_POST['app_name']);
 	$sth->execute();
 
-	add_alert(sprintf('已新增 %s', $_POST['app_name']), 'success');
+	add_alert(sprintf('已新增 %s', htmlentities($_POST['app_name'])), 'success');
 	$D['apply'] = get_apply();
 }
 
@@ -29,8 +29,8 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'edit_app') {
 	$sth->execute();
 
 	add_alert(sprintf('已將 %s 修改為 %s',
-		$D['apply'][$_POST['app_id']],
-		$_POST['app_name']
+		htmlentities($D['apply'][$_POST['app_id']]),
+		htmlentities($_POST['app_name'])
 	), 'success');
 	$D['apply'] = get_apply();
 }
@@ -40,7 +40,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'delete_app') {
 	$sth->bindValue(":app_id", $_POST['app_id']);
 	$res = $sth->execute();
 
-	$app_name = $D['apply'][$_POST['app_id']];
+	$app_name = htmlentities($D['apply'][$_POST['app_id']]);
 
 	if ($res === false) {
 		if ($sth->errorCode() == "23000") {

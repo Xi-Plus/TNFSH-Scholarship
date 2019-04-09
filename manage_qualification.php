@@ -18,7 +18,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'new_qc') {
 	$sth->bindValue(":qc_name", $_POST['qc_name']);
 	$sth->execute();
 
-	add_alert('已新增 ' . $_POST['qc_name'], 'success');
+	add_alert('已新增 ' . htmlentities($_POST['qc_name']), 'success');
 	$D['qualifications'] = get_qualifications();
 }
 
@@ -28,7 +28,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'edit_qc') {
 	$sth->bindValue(":qc_id", $_POST['qc_id']);
 	$sth->execute();
 
-	add_alert('已將 ' . $D['qualifications'][$_POST['qc_id']]['name'] . ' 改為 ' . $_POST['qc_name'], 'success');
+	add_alert('已將 ' . htmlentities($D['qualifications'][$_POST['qc_id']]['name']) . ' 改為 ' . htmlentities($_POST['qc_name']), 'success');
 	$D['qualifications'] = get_qualifications();
 }
 
@@ -37,7 +37,7 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'delete_qc') {
 	$sth->bindValue(":qc_id", $_POST['qc_id']);
 	$res = $sth->execute();
 
-	$qc_name = $D['qualifications'][$_POST['qc_id']]['name'];
+	$qc_name = htmlentities($D['qualifications'][$_POST['qc_id']]['name']);
 
 	if ($res === false) {
 		if ($sth->errorCode() == "23000") {
@@ -57,7 +57,10 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'new_qua') {
 	$sth->bindValue(":qua_name", $_POST['qua_name']);
 	$sth->execute();
 
-	add_alert(sprintf('已新增 %s-%s', $D['qualifications'][$_POST['qua_category']]['name'], $_POST['qua_name']), 'success');
+	add_alert(sprintf('已新增 %s-%s',
+		htmlentities($D['qualifications'][$_POST['qua_category']]['name']),
+		htmlentities($_POST['qua_name'])
+	), 'success');
 	$D['qualifications'] = get_qualifications();
 }
 
@@ -71,10 +74,10 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'edit_qua') {
 	$sth->execute();
 
 	add_alert(sprintf('已將 %s-%s 修改為 %s-%s',
-		$D['qualifications'][$old_qc_id]['name'],
-		$D['qualifications'][$old_qc_id]['list'][$_POST['qua_id']]['qua_name'],
-		$D['qualifications'][$_POST['qua_category']]['name'],
-		$_POST['qua_name']
+		htmlentities($D['qualifications'][$old_qc_id]['name']),
+		htmlentities($D['qualifications'][$old_qc_id]['list'][$_POST['qua_id']]['qua_name']),
+		htmlentities($D['qualifications'][$_POST['qua_category']]['name']),
+		htmlentities($_POST['qua_name'])
 	), 'success');
 	$D['qualifications'] = get_qualifications();
 }
@@ -87,8 +90,8 @@ if ($showform && isset($_POST['action']) && $_POST['action'] === 'delete_qua') {
 	$res = $sth->execute();
 
 	$qua_name = sprintf('%s-%s',
-		$D['qualifications'][$qc_id]['name'],
-		$D['qualifications'][$qc_id]['list'][$_POST['qua_id']]['qua_name']
+		htmlentities($D['qualifications'][$qc_id]['name']),
+		htmlentities($D['qualifications'][$qc_id]['list'][$_POST['qua_id']]['qua_name'])
 	);
 
 	if ($res === false) {
@@ -225,7 +228,7 @@ if ($showform) {
 						<label for="edit-new-qc-name" class="col-form-label">分類</label>
 						<select class="form-control" name="qua_category" id="eq_qua_category" required>
 						<?php foreach ($D['qualifications'] as $qc_id => $qc) {?>
-							<option value="<?=$qc_id?>"><?=$qc['name']?></option>
+							<option value="<?=$qc_id?>"><?=htmlentities($qc['name'])?></option>
 						<?php }?>
 						</select>
 					</div>
