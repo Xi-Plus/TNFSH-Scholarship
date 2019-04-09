@@ -34,7 +34,7 @@ CREATE TABLE `data` (
   `data_date_start` date NOT NULL,
   `data_date_end` date NOT NULL,
   `data_money` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `data_quota` int(11) NOT NULL
+  `data_quota` varchar(255) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `data_attachments` (

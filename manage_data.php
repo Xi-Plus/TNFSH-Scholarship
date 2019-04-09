@@ -203,8 +203,8 @@ if ($showform) {
 			<div class="row">
 				<label class="col-sm-2 form-control-label">本校薦送名額</label>
 				<div class="col-sm-10">
-					<input class="form-control" type="number" min="0" step="1" name="quota"
-						value="<?=$D['data']['quota']?>" required>
+					<input class="form-control" type="text" name="quota"
+						value="<?=$D['data']['quota']?>">
 				</div>
 			</div>
 			<div class="row">
