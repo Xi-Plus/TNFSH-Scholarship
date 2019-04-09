@@ -116,7 +116,7 @@ if ($showform) {
 					<td><?=htmlentities($account['adm_account'])?></td>
 					<td><?=htmlentities($account['adm_name'])?></td>
 					<td>
-						<button type="submit" name="delete" value="<?=$account['adm_account']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i> 刪除</button>
+						<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteAccount" data-account="<?=htmlentities($account['adm_account'])?>" data-admname="<?=htmlentities($account['adm_name'])?>"><i class="fas fa-trash"></i> 刪除</button>
 					</td>
 				</tr>
 				<?php
@@ -159,6 +159,39 @@ if ($showform) {
 		</div>
 	</form>
 </div>
+
+<div class="modal fade" id="deleteAccount" tabindex="-1" role="dialog" aria-labelledby="deleteAccountLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form method="POST">
+				<input name="delete" id="dadm_account" type="hidden">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteAccountLabel">刪除管理員</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-primary">刪除</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+window.onload = function(){
+	$('#deleteAccount').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget);
+		var account = button.data('account');
+		var name = button.data('admname');
+		var modal = $(this);
+		modal.find('.modal-title').text('您真的要刪除管理員 ' + account + ' (' + name + ') 嗎？')
+		modal.find('input#dadm_account').val(account);
+	});
+}
+</script>
 
 <?php
 }
