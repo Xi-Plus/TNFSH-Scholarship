@@ -30,7 +30,8 @@ if ($showform && isset($_POST['submitaction']) && $action === 'edit') {
 		`data_date_start` = :date_start,
 		`data_date_end` = :date_end,
 		`data_money` = :money,
-		`data_quota` = :quota
+		`data_quota` = :quota,
+		`data_note` = :note
 		WHERE `data_id` = :data_id");
 	$sth->bindValue(":semester", $_POST['semester']);
 	$sth->bindValue(":name", $_POST['name']);
@@ -39,6 +40,7 @@ if ($showform && isset($_POST['submitaction']) && $action === 'edit') {
 	$sth->bindValue(":date_end", $_POST['date_end']);
 	$sth->bindValue(":money", $_POST['money']);
 	$sth->bindValue(":quota", $_POST['quota']);
+	$sth->bindValue(":note", $_POST['note']);
 	$sth->bindValue(":data_id", $data_id);
 	$sth->execute();
 
@@ -69,7 +71,7 @@ if ($showform && isset($_POST['submitaction']) && $action === 'edit') {
 }
 
 if ($showform && isset($_POST['submitaction']) && $action === 'new') {
-	$sth = $G["db"]->prepare("INSERT INTO `data` (`data_semester`, `data_name`, `data_apply`, `data_date_start`, `data_date_end`, `data_money`, `data_quota`) VALUES (:semester, :name, :apply, :date_start, :date_end, :money, :quota)");
+	$sth = $G["db"]->prepare("INSERT INTO `data` (`data_semester`, `data_name`, `data_apply`, `data_date_start`, `data_date_end`, `data_money`, `data_quota`, `data_note`) VALUES (:semester, :name, :apply, :date_start, :date_end, :money, :quota, :note)");
 	$sth->bindValue(":semester", $_POST['semester']);
 	$sth->bindValue(":name", $_POST['name']);
 	$sth->bindValue(":apply", $_POST['apply']);
@@ -77,6 +79,7 @@ if ($showform && isset($_POST['submitaction']) && $action === 'new') {
 	$sth->bindValue(":date_end", $_POST['date_end']);
 	$sth->bindValue(":money", $_POST['money']);
 	$sth->bindValue(":quota", $_POST['quota']);
+	$sth->bindValue(":note", $_POST['note']);
 	$sth->execute();
 
 	$data_id = $G["db"]->lastInsertId();
@@ -205,6 +208,12 @@ if ($showform) {
 				<div class="col-sm-10">
 					<input class="form-control" type="text" name="quota"
 						value="<?=$D['data']['quota']?>">
+				</div>
+			</div>
+			<div class="row">
+				<label class="col-sm-2 form-control-label">備註</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" name="note" rows="3"><?=$D['data']['note']?></textarea>
 				</div>
 			</div>
 			<div class="row">

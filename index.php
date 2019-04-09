@@ -49,6 +49,7 @@ require __DIR__ . '/resources/header.php';
                             <th>申請辦法及申請表</th>
                             <th>申請期限<br>本校薦送名額</th>
                             <th>獎學金金額</th>
+                            <th>備註</th>
                             <?php if ($U["islogin"]) {?>
                             <th>管理</th>
                             <?php }?>
@@ -87,6 +88,7 @@ require __DIR__ . '/resources/header.php';
                                 <?php }?>
                             </td>
                             <td><?=$row['money']?></td>
+                            <td><?=nl2br(htmlentities($row['note']))?></td>
                             <?php if ($U["islogin"]) {?>
                             <td>
                                 <a href="<?=$C["path"]?>/manage/data/edit/<?=$data_id?>">修改</a><br>

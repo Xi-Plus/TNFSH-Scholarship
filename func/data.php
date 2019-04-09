@@ -22,6 +22,7 @@ function list_data($offset, $limit) {
 		$D['data'][$row['data_id']]['date_end'] = $row['data_date_end'];
 		$D['data'][$row['data_id']]['money'] = $row['data_money'];
 		$D['data'][$row['data_id']]['quota'] = $row['data_quota'];
+		$D['data'][$row['data_id']]['note'] = $row['data_note'];
 		$D['data'][$row['data_id']]['qualifications'] = [];
 		$D['data'][$row['data_id']]['attachments'] = [];
 	}
@@ -70,6 +71,7 @@ function get_data($data_id) {
 		'date_end' => '',
 		'money' => '',
 		'quota' => '',
+		'note' => '',
 		'qualifications' => [],
 		'qualification_ids' => [],
 		'attachments' => [],
@@ -92,6 +94,7 @@ function get_data($data_id) {
 	$result['date_end'] = $row['data_date_end'];
 	$result['money'] = $row['data_money'];
 	$result['quota'] = $row['data_quota'];
+	$result['note'] = $row['data_note'];
 	$result['qualifications'] = [];
 	$result['qualification_ids'] = [];
 	$result['attachments'] = [];
