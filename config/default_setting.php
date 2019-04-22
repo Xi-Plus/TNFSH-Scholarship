@@ -15,7 +15,7 @@ $C['cookieexpire'] = 86400 * 30;
 
 $C['webmail'] = '';
 
-$C['pagelimitdefalut'] = 5;
+$C['pagelimitdefalut'] = 10;
 $C['pagelimitmin'] = 1;
 $C['pagelimitmax'] = 100;
 $C['pagenext'] = 3;
