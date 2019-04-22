@@ -45,7 +45,8 @@ CREATE TABLE `data_attachments` (
 
 CREATE TABLE `data_qualifications` (
   `dq_data` int(11) NOT NULL,
-  `dq_qualification` int(11) NOT NULL
+  `dq_qualification` int(11) NOT NULL,
+  `dq_args` text COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `login_session` (

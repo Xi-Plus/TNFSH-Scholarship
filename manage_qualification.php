@@ -233,7 +233,7 @@ if ($showform) {
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="edit-new-qc-name" class="col-form-label">資格名稱</label>
+						<label for="edit-new-qc-name" class="col-form-label">資格名稱（使用 %s 代表參數）</label>
 						<input type="text" class="form-control" name="qua_name" id="eq_qua_name" required>
 					</div>
 				</div>

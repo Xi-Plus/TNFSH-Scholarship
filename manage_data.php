@@ -49,9 +49,12 @@ if ($showform && isset($_POST['submitaction']) && $action === 'edit') {
 	$sth->execute();
 
 	foreach ($_POST['qualifications'] as $qualification) {
-		$sth = $G["db"]->prepare("INSERT INTO `data_qualifications` (`dq_data`, `dq_qualification`) VALUES (:dq_data, :dq_qualification)");
+		$qualification_args = $_POST['qualifications_args'][$qualification] ?? [];
+
+		$sth = $G["db"]->prepare("INSERT INTO `data_qualifications` (`dq_data`, `dq_qualification`, `dq_args`) VALUES (:dq_data, :dq_qualification, :dq_args)");
 		$sth->bindValue(":dq_data", $data_id);
 		$sth->bindValue(":dq_qualification", $qualification);
+		$sth->bindValue(":dq_args", json_encode($qualification_args));
 		$sth->execute();
 	}
 
@@ -85,9 +88,12 @@ if ($showform && isset($_POST['submitaction']) && $action === 'new') {
 	$data_id = $G["db"]->lastInsertId();
 
 	foreach ($_POST['qualifications'] as $qualification) {
-		$sth = $G["db"]->prepare("INSERT INTO `data_qualifications` (`dq_data`, `dq_qualification`) VALUES (:dq_data, :dq_qualification)");
+		$qualification_args = $_POST['qualifications_args'][$qualification] ?? [];
+
+		$sth = $G["db"]->prepare("INSERT INTO `data_qualifications` (`dq_data`, `dq_qualification`, `dq_args`) VALUES (:dq_data, :dq_qualification, :dq_args)");
 		$sth->bindValue(":dq_data", $data_id);
 		$sth->bindValue(":dq_qualification", $qualification);
+		$sth->bindValue(":dq_args", json_encode($qualification_args));
 		$sth->execute();
 	}
 
@@ -111,6 +117,11 @@ if ($showform && isset($_POST['submitaction']) && $action === 'new') {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<?php require __DIR__ . '/resources/load_header.php';?>
 	<title><?=$C["titlename"]?>/<?=$actionname?>資料</title>
+	<style>
+	.qualification-args {
+		width: 100px;
+	}
+	</style>
 </head>
 
 <body>
@@ -148,6 +159,9 @@ if ($showform) {
 								<input type="checkbox" name="qualifications[]" value="<?=$qua_id?>"
 									<?=(in_array($qua_id, $D['data']['qualification_ids']) ? 'checked' : '')?>>
 								<?=htmlentities($qua['qua_name'])?>
+								<?php for ($i = 1; $i <= substr_count($qua['qua_name'], '%s'); $i++) {?>
+									<input class="qualification-args" type="text" name="qualifications_args[<?=$qua_id?>][]" placeholder="參數<?=$i?>" value="<?=$D['data']['qualification_args'][$qua_id][$i - 1]?>">
+								<?php }?>
 							</label>
 							<?php }?>
 							</li>

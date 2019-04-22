@@ -24,11 +24,12 @@ function list_data($offset, $limit) {
 		$D['data'][$row['data_id']]['quota'] = $row['data_quota'];
 		$D['data'][$row['data_id']]['note'] = $row['data_note'];
 		$D['data'][$row['data_id']]['qualifications'] = [];
+		$D['data'][$row['data_id']]['qualification_args'] = [];
 		$D['data'][$row['data_id']]['attachments'] = [];
 	}
 
 	// data_qualifications
-	$sth = $G["db"]->prepare('SELECT `dq_data`, `qua_name` FROM (
+	$sth = $G["db"]->prepare('SELECT `dq_data`, `dq_args`, `qua_id`, `qua_name` FROM (
 		SELECT * FROM `data_qualifications` WHERE `dq_data` IN (
 			' . implode(',', array_keys($D['data'])) . '
 		)
@@ -39,7 +40,8 @@ function list_data($offset, $limit) {
 	$sth->execute();
 	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($all as $row) {
-		$D['data'][$row['dq_data']]['qualifications'][] = $row['qua_name'];
+		$D['data'][$row['dq_data']]['qualifications'][$row['qua_id']] = $row['qua_name'];
+		$D['data'][$row['dq_data']]['qualification_args'][$row['qua_id']] = json_decode($row['dq_args']);
 	}
 
 	// data_attachments
@@ -97,10 +99,11 @@ function get_data($data_id) {
 	$result['note'] = $row['data_note'];
 	$result['qualifications'] = [];
 	$result['qualification_ids'] = [];
+	$result['qualification_args'] = [];
 	$result['attachments'] = [];
 
 	// data_qualifications
-	$sth = $G["db"]->prepare('SELECT `dq_data`, `qua_id`, `qua_name` FROM (
+	$sth = $G["db"]->prepare('SELECT `dq_data`, `dq_args`,  `qua_id`, `qua_name` FROM (
 		SELECT * FROM `data_qualifications` WHERE `dq_data` = :data_id
 	) `data_qualifications`
 	LEFT JOIN `qualifications` ON `dq_qualification` = `qua_id`');
@@ -108,8 +111,9 @@ function get_data($data_id) {
 	$sth->execute();
 	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($all as $row) {
-		$result['qualifications'][] = $row['qua_name'];
+		$result['qualifications'][$row['qua_id']] = $row['qua_name'];
 		$result['qualification_ids'][] = $row['qua_id'];
+		$result['qualification_args'][$row['qua_id']] = json_decode($row['dq_args']);
 	}
 
 	// data_attachments

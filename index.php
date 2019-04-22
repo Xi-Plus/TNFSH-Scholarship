@@ -60,8 +60,8 @@ require __DIR__ . '/resources/header.php';
                             <td><?=htmlentities($row['name'])?></td>
                             <td>
                                 <ul>
-								<?php foreach ($row['qualifications'] as $qualification) {?>
-									<li><?=htmlentities($qualification)?></li>
+								<?php foreach ($row['qualifications'] as $qua_id => $qualification) {?>
+									<li><?=htmlentities(vsprintf($qualification, $row['qualification_args'][$qua_id]))?></li>
 								<?php }?>
 								<?php if (count($row['qualifications']) == 0) {?>
 									<li>無</li>
