@@ -158,7 +158,7 @@ if ($showform) {
 							<label>
 								<input type="checkbox" name="qualifications[]" value="<?=$qua_id?>"
 									<?=(in_array($qua_id, $D['data']['qualification_ids']) ? 'checked' : '')?>>
-								<?=htmlentities($qua['qua_name'])?>
+								<?=htmlentities(vsprintf($qua['qua_name'], array_fill(0, substr_count($qua['qua_name'], '%s'), '%s')))?>
 								<?php for ($i = 1; $i <= substr_count($qua['qua_name'], '%s'); $i++) {?>
 									<input class="qualification-args" type="text" name="qualifications_args[<?=$qua_id?>][]" placeholder="參數<?=$i?>" value="<?=$D['data']['qualification_args'][$qua_id][$i - 1]?>">
 								<?php }?>
