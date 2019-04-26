@@ -118,11 +118,11 @@ ALTER TABLE `data`
 
 ALTER TABLE `data_attachments`
   ADD CONSTRAINT `data_attachments_ibfk_1` FOREIGN KEY (`da_attachment`) REFERENCES `attachments` (`att_id`),
-  ADD CONSTRAINT `data_attachments_ibfk_2` FOREIGN KEY (`da_data`) REFERENCES `data` (`data_id`);
+  ADD CONSTRAINT `data_attachments_ibfk_2` FOREIGN KEY (`da_data`) REFERENCES `data` (`data_id`) ON DELETE CASCADE;
 
 ALTER TABLE `data_qualifications`
   ADD CONSTRAINT `data_qualifications_ibfk_1` FOREIGN KEY (`dq_qualification`) REFERENCES `qualifications` (`qua_id`),
-  ADD CONSTRAINT `data_qualifications_ibfk_2` FOREIGN KEY (`dq_data`) REFERENCES `data` (`data_id`);
+  ADD CONSTRAINT `data_qualifications_ibfk_2` FOREIGN KEY (`dq_data`) REFERENCES `data` (`data_id`) ON DELETE CASCADE;
 
 ALTER TABLE `login_session`
   ADD CONSTRAINT `login_session_ibfk_1` FOREIGN KEY (`ls_account`) REFERENCES `admin` (`adm_account`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -10,13 +10,22 @@ if (!$U["islogin"]) {
 }
 
 if ($showform) {
-	$action = $_GET['action'];
-	if (!in_array($action, ['edit', 'new'])) {
+	if (isset($_POST['submitaction'])) {
+		$action = $_POST['submitaction'];
+	} else {
+		$action = $_GET['action'];
+	}
+	if ($action === 'editandback') {
+		$action = 'edit';
+	} else if ($action === 'newandback') {
+		$action = 'new';
+	}
+	if (!in_array($action, ['edit', 'new', 'delete'])) {
 		$action = 'new';
 	}
 	$data_id = $_GET['data_id'] ?? 0;
-	$actionname = ['edit' => '修改', 'new' => '新增'][$action];
-	$back = in_array($_POST['submitaction'], ['editandback', 'newandback']);
+	$actionname = ['edit' => '修改', 'new' => '新增', 'delete' => '刪除'][$action];
+	$back = in_array($_POST['submitaction'], ['editandback', 'newandback', 'delete']);
 	$D['apply'] = get_apply();
 	$D['data'] = get_data($data_id);
 	$D['qualifications'] = get_qualifications();
@@ -106,6 +115,16 @@ if ($showform && isset($_POST['submitaction']) && $action === 'new') {
 
 	add_alert('資料已新增' . ($back ? '，正在返回列表' : ''), 'success');
 	$D['data'] = get_data($data_id);
+}
+
+if ($showform && isset($_POST['submitaction']) && $action === 'delete') {
+	# Cascade delete `data_qualifications` and `data_attachments`
+	$sth = $G["db"]->prepare("DELETE FROM `data` WHERE `data_id` = :data_id");
+	$sth->bindValue(":data_id", $data_id);
+	$sth->execute();
+
+	add_alert('資料已刪除，正在返回列表', 'success');
+	$showform = false;
 }
 
 ?>
@@ -235,6 +254,7 @@ if ($showform) {
 					<?php if ($action === 'edit') {?>
 						<button type="submit" class="btn btn-success" name="submitaction" value="editandback">修改並回到列表</button>
 						<button type="submit" class="btn btn-success" name="submitaction" value="edit">修改</button>
+						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteData">刪除</button>
 					<?php } else {?>
 						<button type="submit" class="btn btn-success" name="submitaction" value="newandback">新增並回到列表</button>
 						<button type="submit" class="btn btn-success" name="submitaction" value="new">新增後繼續新增下一筆</button>
@@ -243,6 +263,30 @@ if ($showform) {
 			</div>
 		</form>
 	</div>
+
+
+<div class="modal fade" id="deleteData" tabindex="-1" role="dialog" aria-labelledby="deleteDataLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form method="POST">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteDataLabel">確認刪除資料？</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					此動作無法復原。
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-danger" name="submitaction" value="delete">刪除</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 <script>
 function morefile(att_id, att_name) {
 	var temp = attlist.children[0].cloneNode(true);
@@ -258,8 +302,10 @@ function removefile(e) {
 </script>
 
 <?php
+}
+
 if ($back) {
-		?>
+	?>
 	<script>
 	setTimeout(() => {
 		document.location = '<?=$C["path"]?>/';
@@ -268,7 +314,6 @@ if ($back) {
 	<?php
 }
 
-}
 require __DIR__ . '/resources/footer.php';
 require __DIR__ . '/resources/load_footer.php';
 ?>
