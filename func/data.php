@@ -1,15 +1,22 @@
 <?php
 
-function list_data($offset, $limit) {
+function list_data($offset, $limit, $search = []) {
 	global $C, $D, $G;
 
 	$apply = get_apply();
 
 	$D['data'] = [];
 
-	$sth = $G["db"]->prepare('SELECT * FROM `data` ORDER BY `data_date_end` DESC, `data_id` DESC LIMIT :offset, :limit');
+	$query = 'SELECT * FROM `data` ';
+	$query .= format_search_sql($search);
+	$query .= 'ORDER BY `data_date_end` DESC, `data_id` DESC LIMIT :offset, :limit';
+
+	$sth = $G["db"]->prepare($query);
 	$sth->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
 	$sth->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+	foreach ($search as $key => $value) {
+		$sth->bindValue(':search' . $key, '%' . $value . '%');
+	}
 	$sth->execute();
 	$all = $sth->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($all as $row) {
@@ -58,6 +65,31 @@ function list_data($offset, $limit) {
 	foreach ($all as $row) {
 		$D['data'][$row['da_data']]['attachments'][] = ['id' => $row['da_attachment'], 'name' => $row['att_name']];
 	}
+}
+
+function count_data($search = []) {
+	global $C, $G;
+
+	$query = 'SELECT COUNT(*) AS `cnt` FROM `data` ';
+	$query .= format_search_sql($search);
+
+	$sth = $G["db"]->prepare($query);
+	foreach ($search as $key => $value) {
+		$sth->bindValue(':search' . $key, '%' . $value . '%');
+	}
+	$sth->execute();
+	return $sth->fetch(PDO::FETCH_ASSOC)['cnt'];
+}
+
+function format_search_sql($search = []) {
+	$query = '';
+	if (count($search)) {
+		$query .= 'WHERE 0 ';
+		foreach ($search as $key => $value) {
+			$query .= sprintf('OR `data_name` LIKE :search%1$d OR `data_money` LIKE :search%1$d OR `data_quota` LIKE :search%1$d ', $key);
+		}
+	}
+	return $query;
 }
 
 function get_data($data_id) {
