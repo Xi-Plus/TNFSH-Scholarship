@@ -9,7 +9,10 @@ function list_data($offset, $limit, $search = []) {
 
 	$query = 'SELECT * FROM `data` ';
 	$query .= format_search_sql($search);
-	$query .= 'ORDER BY `data_date_end` DESC, `data_id` DESC LIMIT :offset, :limit';
+	$query .= 'ORDER BY `data_date_end` >= CURRENT_DATE() DESC,
+		ABS(DATEDIFF(CURRENT_DATE(), `data_date_end`)) ASC,
+		`data_id` DESC
+		LIMIT :offset, :limit';
 
 	$sth = $G["db"]->prepare($query);
 	$sth->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
