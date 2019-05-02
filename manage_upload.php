@@ -37,6 +37,13 @@ if ($showform && isset($_POST["filename"]) && isset($_FILES["file"])) {
 				add_alert('<span class="hide-from-data">上傳成功。</span><span class="show-from-data">上傳成功，5秒後返回上一頁，<a href="#" onclick=backpage();>立刻返回</a>。</span>', 'success');
 				$is_ok = true;
 			}
+		} else if ($att['att_name'] !== $att_name) {
+			$sth = $G["db"]->prepare("UPDATE `attachments` SET `att_name` = :att_name WHERE `att_id` = :att_id");
+			$sth->bindValue(":att_name", $att_name);
+			$sth->bindValue(":att_id", $att_id);
+			$sth->execute();
+			add_alert(sprintf('<span class="hide-from-data">發現舊檔案，同時將檔名更新為%1$s。</span><span class="show-from-data">發現舊檔案，同時將檔名更新為%1$s，5秒後返回上一頁，<a href="#" onclick=backpage();>立刻返回</a>。</span>', $att_name), 'success');
+			$is_ok = true;
 		} else {
 			add_alert('<span class="hide-from-data">發現舊檔案。</span><span class="show-from-data">發現舊檔案，5秒後返回上一頁，<a href="#" onclick=backpage();>立刻返回</a>。</span>', 'success');
 			$is_ok = true;
