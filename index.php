@@ -159,6 +159,7 @@ require __DIR__ . '/resources/header.php';
 <?php
 require __DIR__ . '/resources/footer.php';
 require __DIR__ . '/resources/load_footer.php';
+require __DIR__ . '/resources/gtag.php';
 ?>
 </body>
 
