@@ -26,10 +26,10 @@
             <ul class="navbar-nav mt-2 mt-md-0">
                 <li class="nav-item">
                     <?php if ($U["islogin"]) {?>
-                    <a class="nav-link" href="<?=$C["path"]?>/logout/"><?=htmlentities($U['data']['adm_account'])?>(<?=htmlentities($U['data']['adm_name'])?>) /
-                        <?=htmlentities($U["data"]["name"])?> <i class="fa fa-sign-out" aria-hidden="true"></i> 登出</a>
+                        <a class="nav-link" href="<?=$C["path"]?>/logout/"><?=htmlentities($U['data']['adm_account'])?>(<?=htmlentities($U['data']['adm_name'])?>) /
+                        <i class="fas fa-sign-out-alt"></i> 登出</a>
                     <?php } else {?>
-                    <a class="nav-link" href="<?=$C["path"]?>/login/"><i class="fa fa-sign-in" aria-hidden="true"></i>
+                        <a class="nav-link" href="<?=$C["path"]?>/login/"><i class="fas fa-sign-in-alt"></i>
                         登入</a>
                     <?php }?>
                 </li>
