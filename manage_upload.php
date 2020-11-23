@@ -15,9 +15,9 @@ $is_ok = false;
 $att_id = null;
 $att_name = null;
 if ($showform && isset($_POST["filename"]) && isset($_FILES["file"])) {
-	if ($_FILES["file"]["error"][0] == 4) {
+	if ($_FILES["file"]["error"] == UPLOAD_ERR_NO_FILE) {
 		add_alert('沒有檔案被上傳');
-	} else if ($_FILES["file"]["error"][0] == 0) {
+	} else if ($_FILES["file"]["error"] == UPLOAD_ERR_OK) {
 		$att_id = md5_file($_FILES["file"]["tmp_name"]);
 		$att_name = ($_POST["filename"] != "" ? $_POST["filename"] : $_FILES["file"]["name"][0]);
 
@@ -49,7 +49,7 @@ if ($showform && isset($_POST["filename"]) && isset($_FILES["file"])) {
 			$is_ok = true;
 		}
 	} else {
-		add_alert('上傳失敗');
+		add_alert('上傳失敗，代碼：' . $_FILES["file"]["error"]);
 	}
 }
 
