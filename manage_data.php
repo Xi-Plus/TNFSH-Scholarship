@@ -205,7 +205,7 @@ if ($showform) {
 						</li>
 						<?php }?>
 						<li>
-							<a href="<?=$C["path"]?>/manage/upload" target="_blank">新增檔案</a>
+							<a href="#" onclick="window.open('<?=$C['path']?>/manage/upload');">新增檔案</a>
 						</li>
 					</ul>
 				</div>
