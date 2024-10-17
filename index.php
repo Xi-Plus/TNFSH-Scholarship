@@ -48,7 +48,7 @@ require __DIR__ . '/resources/header.php';
         <form class="form-inline" method="GET">
             <div class="form-group">
                 <label class="my-1 mr-2" for="searchbox">搜尋名稱、金額、備註：</label>
-                <input type="text" id="searchbox" name="search" class="form-control" placeholder="以空格隔開作OR搜尋" size="40" value="<?=$search?>">
+                <input type="text" id="searchbox" name="search" class="form-control" placeholder="以空格隔開作OR搜尋" size="40" value="<?=htmlspecialchars($search)?>">
                 <button type="submit" class="btn btn-primary">搜尋</button>
             </div>
         </form>
@@ -119,11 +119,11 @@ require __DIR__ . '/resources/header.php';
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <li class="page-item <?=($current_page <= 1 ? 'disabled' : '')?>">
-                    <a class="page-link" href="?search=<?=$search?>&offset=0&limit=<?=$data_limit?>">第一頁</a>
+                    <a class="page-link" href="?search=<?=htmlspecialchars($search)?>&offset=0&limit=<?=htmlspecialchars($data_limit)?>">第一頁</a>
                 </li>
                 <li class="page-item <?=($current_page <= 1 ? 'disabled' : '')?>">
                     <?php $offset = count_page($data_offset, $data_limit, -1, $all_count);?>
-                    <a class="page-link" href="?search=<?=$search?>&offset=<?=$offset?>&limit=<?=$data_limit?>">上一頁</a>
+                    <a class="page-link" href="?search=<?=htmlspecialchars($search)?>&offset=<?=htmlspecialchars($offset)?>&limit=<?=htmlspecialchars($data_limit)?>">上一頁</a>
                 </li>
                 <?php for ($diff = -$C['pagenext']; $diff <= -1; $diff++) {
                     $page = $current_page + $diff;
@@ -132,7 +132,7 @@ require __DIR__ . '/resources/header.php';
                     }
                     $offset = count_page($data_offset, $data_limit, $diff, $all_count);
                     ?>
-                    <li class="page-item"><a class="page-link" href="?search=<?=$search?>&offset=<?=$offset?>&limit=<?=$data_limit?>"><?=$page?></a></li>
+                    <li class="page-item"><a class="page-link" href="?search=<?=htmlspecialchars($search)?>&offset=<?=htmlspecialchars($offset)?>&limit=<?=htmlspecialchars($data_limit)?>"><?=$page?></a></li>
                 <?php }?>
                 <li class="page-item active"><a class="page-link" href="#"><?=$current_page?></a></li>
                 <?php for ($diff = 1; $diff <= $C['pagenext']; $diff++) {
@@ -142,15 +142,15 @@ require __DIR__ . '/resources/header.php';
                     }
                     $offset = count_page($data_offset, $data_limit, $diff, $all_count);
                     ?>
-                    <li class="page-item"><a class="page-link" href="?search=<?=$search?>&offset=<?=$offset?>&limit=<?=$data_limit?>"><?=$page?></a></li>
+                    <li class="page-item"><a class="page-link" href="?search=<?=htmlspecialchars($search)?>&offset=<?=htmlspecialchars($offset)?>&limit=<?=htmlspecialchars($data_limit)?>"><?=$page?></a></li>
                 <?php }?>
                 <li class="page-item <?=($current_page >= $max_page ? 'disabled' : '')?>">
                     <?php $offset = count_page($data_offset, $data_limit, 1, $all_count);?>
-                    <a class="page-link" href="?search=<?=$search?>&offset=<?=$offset?>&limit=<?=$data_limit?>">下一頁</a>
+                    <a class="page-link" href="?search=<?=htmlspecialchars($search)?>&offset=<?=htmlspecialchars($offset)?>&limit=<?=htmlspecialchars($data_limit)?>">下一頁</a>
                 </li>
                 <li class="page-item <?=($current_page >= $max_page ? 'disabled' : '')?>">
                     <?php $offset = ($max_page - 1) * $data_limit;?>
-                    <a class="page-link" href="?search=<?=$search?>&offset=<?=$offset?>&limit=<?=$data_limit?>">最末頁</a>
+                    <a class="page-link" href="?search=<?=htmlspecialchars($search)?>&offset=<?=htmlspecialchars($offset)?>&limit=<?=htmlspecialchars($data_limit)?>">最末頁</a>
                 </li>
             </ul>
         </nav>
